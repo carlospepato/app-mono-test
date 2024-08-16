@@ -1,4 +1,4 @@
-import { Like } from "../types/like";
+import { Like, Unlike } from "../types/like";
 import { prisma } from "../utils/prisma";
 
 async function likePost({postid, userid} : Like) {
@@ -19,12 +19,15 @@ async function likePost({postid, userid} : Like) {
     }
   });
 
-  return {message: "Post liked", like};
+  return {
+    userid: like.userid,
+    postid: like.postid
+  };
   
 }
 
-async function unlikePost({userid, postid} : Like) {
-  const like = await prisma.like.findFirst({where: {userid, postid}});
+async function unlikePost({ id } : Unlike) {
+  const like = await prisma.like.findFirst({where: {id}});
   if (!like) {
     return {message: "Like not found"};
   }

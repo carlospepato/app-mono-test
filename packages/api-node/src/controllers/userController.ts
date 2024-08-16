@@ -44,7 +44,7 @@ async function updateUser(request: UserRequest, reply: FastifyReply) {
   const id = request.params.id;
   const { name, email, password } = request.body;
 
-  const user = await userService.updateUser(id, { name, email, password });
+  const user = await userService.updateUser(id, password,{ name, email });
 
   if (!user) {
     return reply.code(404).send({ message: "User not found" });

@@ -1,6 +1,8 @@
 import z from "zod";
 
 export const getAllUsersSchema = {
+  tags: ['User'],
+  summary: 'Get all users',
   response: {
     200: z.object({
       message: z.string(),
@@ -18,6 +20,8 @@ export const getAllUsersSchema = {
 };
 
 export const getUserSchema = {
+  tags: ['User'],
+  summary: 'Get a user',
   params: z.object({
     id: z.string(),
   }),
@@ -38,6 +42,8 @@ export const getUserSchema = {
 }
 
 export const createUserSchema = {
+  tags: ['User'],
+  summary: 'Create a new user',
   body: z.object({
     name: z.string(),
     email: z.string().email(),
@@ -60,6 +66,8 @@ export const createUserSchema = {
 }
 
 export const updateUserSchema = {
+  tags: ['User'],
+  summary: 'Update a user',
   params: z.object({
     id: z.string(),
   }),
@@ -88,6 +96,8 @@ export const updateUserSchema = {
 };
 
 export const deleteUserSchema = {
+  tags: ['User'],
+  summary: 'Delete a user',
   params: z.object({
     id: z.string(),
   }),

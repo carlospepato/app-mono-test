@@ -1,5 +1,8 @@
 export interface Like {
-  id?: string;
   userid: string;
   postid: string;
+}
+
+export interface Unlike{
+  id: string;
 }

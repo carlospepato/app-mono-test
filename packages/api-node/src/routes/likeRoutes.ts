@@ -8,7 +8,7 @@ export async function likeRoutes(server: FastifyInstance) {
     schema: likeSchema
   }, likeController.likePost);
 
-  server.withTypeProvider<ZodTypeProvider>().post('/unlike',{
+  server.withTypeProvider<ZodTypeProvider>().delete('/like/:id',{
     schema: unlikeSchema
   }, likeController.unlikePost);
 }

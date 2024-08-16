@@ -1,5 +1,6 @@
 import { User } from "../types/user";
 import { prisma } from "../utils/prisma";
+import bcrypt from 'bcrypt';
 
 async function getAllUsers() {
   const users = await prisma.user.findMany();
@@ -33,17 +34,17 @@ async function createUser({ name, email, password }: User) {
   if (userExist) {
     return { message: "User already exists" };
   }
-
+  const hashedPassword = await bcrypt.hash(password, 10);
   const user = await prisma.user.create({
     data: {
       name,
       email,
-      password,
+      password: hashedPassword,
     },
   });
 
   return { 
-    message: "User created", 
+    message: "User created",
     user: {
       name: user.name,
       email: user.email,
@@ -53,20 +54,20 @@ async function createUser({ name, email, password }: User) {
   };
 }
 
-async function updateUser(id: string, { name, email, password }: Partial<User>) {
+async function updateUser(id: string, password : string, { name, email }: Partial<User>) {
   const user = await prisma.user.findFirst({ where: { id } });
 
   if (!user) {
-    return null; // Retornando null se o usuário não for encontrado
+    return null;
   }
-
+  const samePassword = await bcrypt.compare(password, user.password);
   const updatedUser = await prisma.user.update({
     where: { id },
     data: {
       name,
       email,
-      password: user.password, // Atualizando o password apenas se fornecido
-      updatedAt: new Date(), // Atualizando `updatedAt` com a data atual
+      password: samePassword ? user.password : await bcrypt.hash(password, 10),
+      updatedAt: new Date(),
     },
   });
 

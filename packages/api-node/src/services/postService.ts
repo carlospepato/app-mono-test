@@ -2,16 +2,26 @@ import { Post } from "../types/post";
 import { prisma } from "../utils/prisma";
 
 async function getAllPost(){
-  const post = await prisma.post.findMany();
-  return {message: "Posts found", post};
+  const posts = await prisma.post.findMany();
+  return {
+    posts: posts.map(post => ({
+      id: post.id,
+      content: post.content,
+      userid: post.userid
+    }))
+  };
 }
 
 async function getPostById(id: string) {
   const post = await prisma.post.findFirst({where: {id}});
   if (!post) {
-    return {message: "Post not found"};
+    return null;
   }
-  return {message: "Post found", post};
+  return {
+    id: post.id,
+    content: post.content,
+    userid: post.userid
+  };
 }
 
 async function createPost({content, userid} : Post) {
@@ -22,7 +32,11 @@ async function createPost({content, userid} : Post) {
     }
   });
 
-  return {message: "Post created", post};
+  return {
+    id: post.id,
+    content: post.content,
+    createdAt: post.createdAt.toISOString()
+  };
 }
 
 export default { getAllPost, getPostById, createPost};

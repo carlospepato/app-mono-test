@@ -9,14 +9,18 @@ type PostRequest = FastifyRequest<{
 }>
 
 async function getAllPosts(request: FastifyRequest, reply: FastifyReply) {
-  const post = await postService.getAllPost();
-  reply.code(200).send({message: "Posts found", post});
+  const {posts} = await postService.getAllPost();
+  if (posts.length === 0) {
+    return reply.code(200).send({ message: "No post created yet", posts });
+  }
+
+  return reply.code(200).send({ message: "Posts found", posts });
 }
 
 async function getPost(request: PostRequest, reply: FastifyReply){
   const id = request.params.id;
   const post = await postService.getPostById(id);
-  if (post.message === "Post not found") {
+  if (!post) {
     reply.code(400).send({message: "Post not found"});
   } else {
     reply.code(200).send({message: "Post found", post});
