@@ -1,5 +1,7 @@
 import z from "zod";
 
+// tipagem das requisições de post
+
 export const getAllPostsSchema = {
   tags: ['Post'],
   summary: 'Get all posts',

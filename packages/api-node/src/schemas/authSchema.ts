@@ -1,5 +1,7 @@
 import z from "zod";
 
+// tipagem das requisições de login e registro
+
 export const loginSchema = {
   tags: ['Auth'],
   summary: 'Login',
@@ -10,9 +12,10 @@ export const loginSchema = {
   response:{
     200: z.object({
       message: z.string(),
+      token: z.string(),
       user: z.object({
         name: z.string(),
-        email: z.string(),
+        email: z.string().email(),
       }),
     }),
     400: z.object({
@@ -39,6 +42,10 @@ export const registerSchema = {
     }),
     400: z.object({
       message: z.string(),
+      user: z.object({
+        name: z.string(),
+        email: z.string(),
+      }),
     }),
   },
 }

@@ -1,5 +1,7 @@
 import z from "zod";
 
+// tipagem das requisições de usuário
+
 export const getAllUsersSchema = {
   tags: ['User'],
   summary: 'Get all users',

@@ -1,5 +1,7 @@
 import z from "zod";
 
+// tipagem das requisições de like e unlike
+
 export const likeSchema = {
   tags: ['Like'],
   summary: 'Like a post',
