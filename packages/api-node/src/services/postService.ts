@@ -1,8 +1,10 @@
-import { Post } from "../types/post";
-import { prisma } from "../utils/prisma";
+import { Post } from "../types/post"
+import { prisma } from "../utils/prisma"
 
 async function getAllPost(){
-  const posts = await prisma.post.findMany();
+
+  // buscar todos os posts no banco de dados
+  const posts = await prisma.post.findMany()
   return {
     posts: posts.map(post => ({
       id: post.id,
@@ -13,7 +15,9 @@ async function getAllPost(){
 }
 
 async function getPostById(id: string) {
-  const post = await prisma.post.findFirst({where: {id}});
+
+  // buscar post no banco de dados pelo id
+  const post = await prisma.post.findFirst({where: {id}})
   if (!post) {
     return null;
   }
@@ -25,6 +29,8 @@ async function getPostById(id: string) {
 }
 
 async function createPost({content, userid} : Post) {
+
+  // criar post no banco de dados
   const post = await prisma.post.create({
     data:{
       content,
@@ -39,4 +45,4 @@ async function createPost({content, userid} : Post) {
   };
 }
 
-export default { getAllPost, getPostById, createPost};
+export default { getAllPost, getPostById, createPost}

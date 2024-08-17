@@ -1,9 +1,11 @@
-import { User } from "../types/user";
-import { prisma } from "../utils/prisma";
-import bcrypt from 'bcrypt';
+import { User } from "../types/user"
+import { prisma } from "../utils/prisma"
+import bcrypt from 'bcrypt'
 
 async function getAllUsers() {
-  const users = await prisma.user.findMany();
+
+  // buscar todos os usuários no banco de dados
+  const users = await prisma.user.findMany()
   return {
     users: users.map(user => ({
       name: user.name,
@@ -15,10 +17,13 @@ async function getAllUsers() {
 }
 
 async function getUserById(id: string) {
+
+  // buscar usuário no banco de dados
   const user = await prisma.user.findFirst({ where: { id } });
 
+  // verificar se o usuário existe
   if (!user) {
-    return null;
+    return null
   }
 
   return {
@@ -30,18 +35,26 @@ async function getUserById(id: string) {
 }
 
 async function createUser({ name, email, password }: User) {
+
+  // Buscar usuário no banco de dados pelo email
   const userExist = await prisma.user.findFirst({ where: { email } });
+
+  // Verificar se o usuário já existe
   if (userExist) {
-    return { message: "User already exists" };
+    return { message: "User already exists" }
   }
+
+  // Criptografar senha
   const hashedPassword = await bcrypt.hash(password, 10);
+
+  // Criar usuário
   const user = await prisma.user.create({
     data: {
       name,
       email,
       password: hashedPassword,
     },
-  });
+  })
 
   return { 
     message: "User created",
@@ -51,16 +64,23 @@ async function createUser({ name, email, password }: User) {
       createdAt: user.createdAt.toISOString(),
       updatedAt: user.updatedAt.toISOString(),
     }
-  };
+  }
 }
 
 async function updateUser(id: string, password : string, { name, email }: Partial<User>) {
-  const user = await prisma.user.findFirst({ where: { id } });
 
+  // Buscar usuário no banco de dados
+  const user = await prisma.user.findFirst({ where: { id } })
+
+  // Verificar se o usuário existe
   if (!user) {
-    return null;
+    return null
   }
-  const samePassword = await bcrypt.compare(password, user.password);
+
+  // Verificar se a senha está correta
+  const samePassword = await bcrypt.compare(password, user.password)
+
+  // atualizar usuário no banco de dados
   const updatedUser = await prisma.user.update({
     where: { id },
     data: {
@@ -69,7 +89,7 @@ async function updateUser(id: string, password : string, { name, email }: Partia
       password: samePassword ? user.password : await bcrypt.hash(password, 10),
       updatedAt: new Date(),
     },
-  });
+  })
 
   return {
     id: updatedUser.id,
@@ -81,19 +101,17 @@ async function updateUser(id: string, password : string, { name, email }: Partia
 }
 
 async function deleteUser(id: string) {
-  const user = await prisma.user.findFirst({where: {id}});
+
+  // buscar usuário no banco de dados
+  const user = await prisma.user.findFirst({where: {id}})
+
+  // verificar se o usuário existe
   if (!user) {
-    return {message: "User not found"};
+    return {message: "User not found"}
   }
 
-  await prisma.user.delete({where: {id}});
+  await prisma.user.delete({where: {id}})
   return {message: "User deleted"};
 }
 
-export default{
-  getAllUsers,
-  getUserById,
-  createUser,
-  updateUser,
-  deleteUser
-};
+export default{ getAllUsers, getUserById, createUser, updateUser, deleteUser }

@@ -1,19 +1,30 @@
-import { User } from "../types/user";
-import { prisma } from "../utils/prisma";
-import bcrypt from 'bcrypt';
+import { User } from "../types/user"
+import { prisma } from "../utils/prisma"
+import bcrypt from 'bcrypt'
 
-async function login(password : string, { email }: Partial<User>) {
-    const user = await prisma.user.findFirst({ where: { email } });
+async function login(password : string, email : string) {
+
+    // buscar usuário no banco de dados
+    const user = await prisma.user.findFirst({ where: { email } })
+
+    // verificar se o usuário existe
     if (!user) {
-        return { message: "User not found" };
+        return {
+            user: {
+                name: "",
+                email: "",
+            }
+        }
     }
-    const isPasswordValid = await bcrypt.compare(password, user.password);
+
+    // verificar se a senha está correta
+    const isPasswordValid = await bcrypt.compare(password, user.password)
     if (!isPasswordValid) {
-        return { message: "Invalid password" };
+        return null;
     }
     return {
-        message: "Logged in",
         user: {
+            id: user.id,
             name: user.name,
             email: user.email,
         }
@@ -21,11 +32,25 @@ async function login(password : string, { email }: Partial<User>) {
 }
 
 async function register({ name, email, password }: User) {
-    const userExist = await prisma.user.findFirst({ where: { email } });
+
+    // buscar usuário no banco de dados
+    const userExist = await prisma.user.findFirst({ where: { email } })
+
+    // verificar se o usuário já existe
     if (userExist) {
-        return { message: "User already exists" };
+        return {
+            message: "User already exists",
+            user: {
+                name: userExist.name,
+                email: userExist.email,
+            }
+        }
     }
-    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // criptografar senha
+    const hashedPassword = await bcrypt.hash(password, 10)
+
+    // criar usuário
     const user = await prisma.user.create({
         data: {
             name,
@@ -35,7 +60,6 @@ async function register({ name, email, password }: User) {
     });
 
     return {
-        message: "User created",
         user: {
             name: user.name,
             email: user.email,
@@ -43,4 +67,4 @@ async function register({ name, email, password }: User) {
     };
 }
 
-export default { login, register };
+export default { login, register }
