@@ -8,6 +8,8 @@ import { likeRoutes } from './routes/likeRoutes';
 import { postRoutes } from './routes/postRoutes';
 import fastifyJwt from '@fastify/jwt';
 import { authRoutes } from './routes/authRoutes';
+import { profileRoutes } from './routes/profileRoutes';
+import { timelineRoutes } from './routes/timelineRoutes';
 
 const server = Fastify({ logger: true });
 
@@ -36,6 +38,8 @@ server.setValidatorCompiler(validatorCompiler);
 server.setSerializerCompiler(serializerCompiler);
 
 server.register(authRoutes)
+server.register(profileRoutes)
+server.register(timelineRoutes)
 server.register(userRoutes)
 server.register(postRoutes)
 server.register(likeRoutes)
