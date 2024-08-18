@@ -17,7 +17,7 @@ async function login(request: LoginRequest, reply: FastifyReply) {
   const { email, password } = request.body
 
   // chama o serviço de login e passa o email e senha como parâmetros
-  const userLogin = await authService.login(email, password)
+  const userLogin = await authService.login(password, {email})
   
   // verifica se o usuário não foi encontrado
   if (!userLogin) {

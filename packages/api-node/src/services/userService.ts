@@ -67,7 +67,7 @@ async function createUser({ name, email, password }: User) {
   }
 }
 
-async function updateUser(id: string, password : string, { name, email }: Partial<User>) {
+async function updateUser(id: string, { name, email }: Partial<User>) {
 
   // Buscar usuário no banco de dados
   const user = await prisma.user.findFirst({ where: { id } })
@@ -78,7 +78,7 @@ async function updateUser(id: string, password : string, { name, email }: Partia
   }
 
   // Verificar se a senha está correta
-  const samePassword = await bcrypt.compare(password, user.password)
+  // const samePassword = await bcrypt.compare(password, user.password)
 
   // atualizar usuário no banco de dados
   const updatedUser = await prisma.user.update({
@@ -86,7 +86,7 @@ async function updateUser(id: string, password : string, { name, email }: Partia
     data: {
       name,
       email,
-      password: samePassword ? user.password : await bcrypt.hash(password, 10),
+      // password: samePassword ? user.password : await bcrypt.hash(password, 10),
       updatedAt: new Date(),
     },
   })

@@ -13,6 +13,7 @@ export const likeSchema = {
     201: z.object({
       message: z.string(),
       like: z.object({
+        id: z.string(),
         userId: z.string(),
         postId: z.string(),
       }),

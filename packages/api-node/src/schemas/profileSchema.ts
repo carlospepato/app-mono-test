@@ -9,9 +9,12 @@ export const getProfileSchema = {
     200: z.object({
       message: z.string(),
       user: z.object({
+        id: z.string(),
         name: z.string(),
         email: z.string().email(),
         password: z.string(),
+        createdAt: z.string(),
+        updatedAt: z.string(),
       }),
     }),
     400: z.object({

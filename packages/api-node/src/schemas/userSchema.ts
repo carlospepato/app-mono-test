@@ -75,8 +75,7 @@ export const updateUserSchema = {
   }),
   body: z.object({
     name: z.string(),
-    email: z.string().email(),
-    password: z.string().optional(),
+    email: z.string().email()
   }),
   response: {
     200: z.object({

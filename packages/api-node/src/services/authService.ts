@@ -2,10 +2,10 @@ import { User } from "../types/user"
 import { prisma } from "../utils/prisma"
 import bcrypt from 'bcrypt'
 
-async function login(password : string, email : string) {
+async function login(password : string, {email} : Partial<User>) {
 
     // buscar usuário no banco de dados
-    const user = await prisma.user.findFirst({ where: { email } })
+    const user = await prisma.user.findFirst({ where: { email } });
 
     // verificar se o usuário existe
     if (!user) {

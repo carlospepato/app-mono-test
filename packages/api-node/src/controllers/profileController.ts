@@ -15,9 +15,12 @@ async function profile(request: FastifyRequest, reply: FastifyReply) {
       {
         message: "Profile found",
         user: {
-          name: profile.user?.name,
-          email: profile.user?.email,
-          password: profile.user?.password
+          id: profile.user.id,
+          name: profile.user.name,
+          email: profile.user.email,
+          password: profile.user.password,
+          createdAt: profile.user.createdAt,
+          updatedAt: profile.user.updatedAt
         }
       }
     );

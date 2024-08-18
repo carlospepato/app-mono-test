@@ -31,6 +31,7 @@ async function likePost(request: LikeRequest, reply: FastifyReply){
     reply.code(201).send({
       message: "Post liked", 
       like: {
+        id: like.id,
         userId: like.userid,
         postId: like.postid
       }

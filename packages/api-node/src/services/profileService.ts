@@ -11,9 +11,12 @@ async function profile(id : string) {
     }
     return {
         user: {
-            name: user?.name,
-            email: user?.email,
-            password: user?.password,
+            id: user.id,
+            name: user.name,
+            email: user.email,
+            password: user.password,
+            createdAt: user.createdAt.toISOString(),
+            updatedAt: user.updatedAt.toISOString()
         }
     }
   

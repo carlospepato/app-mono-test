@@ -27,6 +27,7 @@ async function likePost({postid, userid} : Like) {
   });
 
   return {
+    id: like.id,
     userid: like.userid,
     postid: like.postid
   };

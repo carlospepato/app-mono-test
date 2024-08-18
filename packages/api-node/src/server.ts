@@ -1,5 +1,6 @@
 import Fastify from 'fastify';
 import { jsonSchemaTransform, serializerCompiler, validatorCompiler } from "fastify-type-provider-zod";
+import cors from '@fastify/cors';
 import fastifySwagger from '@fastify/swagger';
 import fastifySwaggerUi from '@fastify/swagger-ui';
 import { userRoutes } from './routes/userRoutes';
@@ -12,6 +13,10 @@ import { profileRoutes } from './routes/profileRoutes';
 import { timelineRoutes } from './routes/timelineRoutes';
 
 const server = Fastify({ logger: true });
+server.register(cors,{
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+})
+
 
 server.register(fastifyJwt,{
   secret: config.jwtSecret
