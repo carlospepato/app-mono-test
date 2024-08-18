@@ -1,8 +1,12 @@
-export function App() {
+import { ToastContainer } from "react-toastify"
+import { router } from "./routes/routes"
+import { RouterProvider } from 'react-router-dom'
 
+export function App() {
   return (
-    <div>
-      <p className='underline'>Hello world</p>
-    </div>
+    <>
+      <RouterProvider router={router} />
+      <ToastContainer/>
+    </>
   )
 }
