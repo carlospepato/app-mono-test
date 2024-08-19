@@ -18,12 +18,16 @@ interface UserData {
 interface Post {
   id: string;
   content: string;
-  userid: string;
+  createdAt: string;
+  user: {
+    name: string;
+    email: string;
+  };
 }
 
-interface PostData {
+interface TimelineData {
   message: string;
-  posts: Post[];
+  timeline: Post[];
 }
 
 export function Home() {
@@ -51,47 +55,45 @@ export function Home() {
       }
 
       const data = await response.json();
-      setProfile(data); // Assume que `data.user.id` é o `userId`
+      setProfile(data);
     }
 
     fetchProfile();
   }, []);
 
-  useEffect(() => {
-    async function fetchPosts() {
-      try {
-        const token = localStorage.getItem('token');
-        if (!token) {
-          console.error("Token não encontrado.");
-          return;
-        }
-
-        const response = await fetch('http://localhost:3333/posts', {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-          }
-        });
-
-        if (!response.ok) {
-          throw new Error('Falha ao buscar os posts.');
-        }
-
-        const data: PostData = await response.json();
-        setPosts(data.posts); // Atualiza o estado com os posts
-      } catch (error) {
-        console.error('Erro ao buscar os posts:', error);
+  const fetchPosts = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        console.error("Token não encontrado.");
+        return;
       }
-    }
 
-    fetchPosts();
+      const response = await fetch('http://localhost:3333/timeline', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error('Falha ao buscar os posts.');
+      }
+
+      const data: TimelineData = await response.json();
+      setPosts(data.timeline);
+    } catch (error) {
+      console.error('Erro ao buscar os posts:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchPosts(); // Chama a função fetchPosts ao carregar a página
   }, []);
 
-  // Função chamada após a criação de um novo post
-  const handlePostCreated = (newPost: Post) => {
-    // Adiciona o novo post no início do array de posts existentes
-    setPosts((prevPosts) => [newPost, ...prevPosts]);
+  const handlePostCreated = () => {
+    fetchPosts(); // Atualiza os posts após a criação de um novo post
   };
 
   return (
@@ -99,14 +101,17 @@ export function Home() {
       <div className="max-w-4xl w-full mx-auto px-3">
         <CreatePost userId={profile?.user.id} onPostCreated={handlePostCreated} />
         <div className="w-full h-px bg-zinc-500 my-4"></div>
-        {posts.map((post) => (
-          <CardPost 
-            key={post.id} 
-            content={post.content} 
-            userId={post.userid}
-            postId={post.id}
-          />
-        ))}
+        <div className="w-full my-4">
+          {posts.map((post) => (
+            <CardPost 
+              key={post.id} 
+              content={post.content}
+              userId= {profile?.user.id || ""}
+              userName={post.user.name}
+              postId={post.id}
+            />
+          ))}
+        </div>
       </div>
     </>
   );

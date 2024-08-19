@@ -5,32 +5,24 @@ interface CardPostProps {
   postId: string;
   content: string;
   userId: string;
+  userName: string;
 }
 
-interface UserData {
-  name: string;
-  email: string;
-}
 
-interface dataLiked{
-  message: string;
-  like: likeProps
-}
-
-interface likeProps{
+interface DataLiked {
   id: string;
-  postid: string;
-  userid: string;
+  postId: string;
+  userId: string;
 }
 
-export function CardPost({ postId, content, userId }: CardPostProps) {
-  const [userName, setUserName] = useState<string>("");
-  const [dataLiked, setDataLiked] = useState<dataLiked>();
+export function CardPost({ postId, content, userName, userId }: CardPostProps) {
+  // const [userName, setUserName] = useState<string>("");
   const [isLiked, setIsLiked] = useState<boolean>(false);
-
+  const [likeId, setLikeId] = useState<string | null>(null);
+  const [qttLikes, setQttLikes] = useState<number>(0);
 
   useEffect(() => {
-    async function fetchUserName() {
+    async function checkIfLiked() {
       try {
         const token = localStorage.getItem('token');
         if (!token) {
@@ -38,7 +30,7 @@ export function CardPost({ postId, content, userId }: CardPostProps) {
           return;
         }
 
-        const response = await fetch(`http://localhost:3333/user/${userId}`, {
+        const response = await fetch('http://localhost:3333/like', {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -47,18 +39,24 @@ export function CardPost({ postId, content, userId }: CardPostProps) {
         });
 
         if (!response.ok) {
-          throw new Error('Failed to fetch user data.');
+          throw new Error('Failed to fetch likes.');
         }
 
-        const data: { user: UserData } = await response.json();
-        setUserName(data.user.name);
+        const data: { likes: DataLiked[] } = await response.json();
+        const likedPost = data.likes.find(like => like.postId === postId && like.userId === userId)
+        const qttLikes = data.likes.filter(like => like.postId === postId).length;
+
+        if (likedPost) {
+          setIsLiked(true);
+          setLikeId(likedPost.id);
+        }
+        setQttLikes(qttLikes);
       } catch (error) {
-        console.error("Error fetching user name:", error);
+        console.error("Error checking like status:", error);
       }
     }
-
-    fetchUserName();
-  }, [userId]);
+    checkIfLiked();
+  }, [postId, userId]);
 
   async function handleLike() {
     try {
@@ -83,8 +81,11 @@ export function CardPost({ postId, content, userId }: CardPostProps) {
       if (!response.ok) {
         throw new Error('Failed to like post.');
       }
-      setDataLiked(await response.json());
+
+      const data = await response.json();
+      setLikeId(data.like.id);
       setIsLiked(true);
+      setQttLikes(prev => prev + 1);
     } catch (error) {
       console.error("Error liking post:", error);
     }
@@ -98,7 +99,7 @@ export function CardPost({ postId, content, userId }: CardPostProps) {
         return;
       }
 
-      const response = await fetch(`http://localhost:3333/like/${dataLiked?.like.id}`, {
+      const response = await fetch(`http://localhost:3333/like/${likeId}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
@@ -111,6 +112,8 @@ export function CardPost({ postId, content, userId }: CardPostProps) {
       }
 
       setIsLiked(false);
+      setLikeId(null);
+      setQttLikes(prev => prev - 1);
     } catch (error) {
       console.error("Error unliking post:", error);
     }
@@ -136,9 +139,12 @@ export function CardPost({ postId, content, userId }: CardPostProps) {
         <div className="w-auto text-zinc-200">
           <span>{content}</span>
         </div>
-        <button onClick={handleLikeToggle}>
-          <Heart size={22} weight={isLiked ? 'fill' : 'regular'} className={`${isLiked ? 'text-primary' : 'text-white'}`} />
-        </button>
+        <div className="flex items-center gap-2">
+          <button onClick={handleLikeToggle}>
+            <Heart size={22} weight={isLiked ? 'fill' : 'regular'} className={`${isLiked ? 'text-primary' : 'text-white'}`} />
+          </button>
+          <span className="text-xs font-semibold">{qttLikes}</span>
+        </div>
       </div>
     </div>
   );
