@@ -2,8 +2,21 @@
   "name": "app-mono-test",
   "version": "1.0.0",
   "main": "index.js",
-  "repository": "git@github.com:leandro-andrade-candido/app-mono-test.git",
+  "repository": "git@github.com:carlospepato/app-mono-test.git",
   "license": "MIT",
+  "scripts": {
+  "frontend-react": "npm start --prefix packages/frontend-react",
+  "api-node": "npm start --prefix packages/api-node",
+  "test": "npm test --prefix packages/api-node",
+  "dev": "concurrently \"npm run frontend-react\" \"npm run api-node\"",
+  "install:frontend-react": "cd packages/frontend-react && npm install --verbose",
+  "install:api-node": "cd packages/api-node && npm install --verbose",
+  "install:all": "npm install && npm run install:frontend-react && npm run install:api-node",
+  "build": "npm run build --prefix packages/frontend-react"
+},
+  "devDependencies": {
+    "concurrently": "^7.0.0"
+  },
   "private": true,
   "workspaces": [
     "packages/*"

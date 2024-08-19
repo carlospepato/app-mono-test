@@ -1,108 +1,97 @@
-# Challenge for developers - Technical Assessment
 
-## Descrição Geral
+# Teste Dialog para Desenvolvedor Fullstack
 
-Este repositório contém um desafio técnico para desenvolvedores de diferentes níveis (Júnior, Pleno e Sênior). O objetivo é construir uma aplicação de perfil de usuário com uma timeline (feed) onde os usuários possam criar postagens e interagir com reações, como curtidas. O desafio está estruturado em diferentes níveis de complexidade, permitindo avaliar habilidades em desenvolvimento frontend e backend.
+## Descrição do Projeto
 
-## Estrutura do Repositório
+Este projeto é uma aplicação web que permite aos usuários interagir através de postagens e reações. A aplicação oferece:
 
-O repositório está organizado como um monorepo, com múltiplos diretórios correspondentes a diferentes partes do sistema, incluindo tanto APIs quanto interfaces de usuário. Abaixo está uma explicação detalhada sobre cada diretório e sua finalidade:
+**Timeline de Postagens:**
 
+Os usuários podem visualizar uma lista de postagens, criar novas publicações e reagir (curtir) as postagens de outros usuários.
+
+**Perfil do Usuário:**
+
+Os usuários têm acesso a uma página de perfil onde podem editar suas informações pessoais, como nome e e-mail.
+
+### Funcionalidades adicionais
+
+**Autenticação:**
+
+Para acessar a aplicação, os usuários devem se registrar e fazer login. Após o login, a aplicação utiliza um token de autenticação para validar todas as ações do usuário.
+
+**Segurança:**
+
+O token de autenticação é verificado a cada ação para garantir a segurança e integridade das interações dentro da aplicação.
+
+
+
+## Stack utilizada
+
+**Back-end:** Node, TypeScript, Fastify, Vitest, Prisma ORM, SQLite
+
+**Front-end:** React, TypeScript, TailwindCSS
+
+
+
+
+## Rodando localmente
+
+Clone o projeto
+
+```bash
+  git clone -b junior --single-branch https://github.com/carlospepato/app-mono-test.git
 ```
-user-profile-app/
-├── README.md
-├── packages/
-│   ├── monolith-sample/      # Monolito Quick Start em Node.js (Iniciado)
-│   ├── monolith-node/        # Monolito em Node.js (Iniciado)
-│   ├── api-node/             # API em Node.js (Iniciado)
-│   ├── api-go/               # API em Go (Iniciado)
-│   ├── microservices-go/     # Microserviços em Go (Diretórios Vazios)
-│   ├── frontend-react/       # Frontend em React (Pacote Inicial Criado)
-│   ├── frontend-nextjs/      # Frontend em Next.js (Pacote Inicial Criado)
-├── package.json
-└── .gitignore
+
+Entre no diretório do projeto
+
+```bash
+  cd app-mono-test
 ```
 
-## Níveis de Experiência
+Instale as dependências
 
-### Nível Júnior
+```bash
+  npm run install:all
+```
 
-#### Requisitos Mínimos
-- **API RESTful:** Implementar um monolito em Node.js ou uma API RESTful em Node.js ou Go para gerenciamento de perfis de usuário.
-  - Operações CRUD (Create, Read, Update, Delete) para os perfis.
-  - Endpoint para criação de postagens na timeline.
-  - Endpoint para reagir a postagens com curtidas.
-- **Frontend Básico:** Utilizar React ou Next.js para criar uma tela de perfil e uma timeline de postagens.
-  - Exibir postagens na timeline com a capacidade de adicionar novas postagens e curtir.
-- **Autenticação:** Implementar autenticação utilizando JWT.
-- **Testes Unitários:** Criar testes unitários para os principais endpoints da API.
-- **Documentação:** Documentar a API utilizando Swagger ou uma ferramenta similar.
+Inicie a aplicação
 
-#### Implementação Inicial (monolith-sample)
-- O diretório `monolith-sample/` já contém uma implementação básica em Node.js e React.
-- **Dependências**: O projeto foi configurado para rodar com Node.js e SQLite.
-- **Instruções de Uso**: 
-  - Para rodar o projeto, utilize os scripts:
-    ```bash
-    cd packages/monolith-sample
-    npm run install:all
-    npm run dev
-    ```
+```bash
+  npm run dev
+```
 
-### Nível Pleno
 
-#### Requisitos Adicionais
-- **Frontend Avançado:** Migrar o frontend para Next.js (caso tenha escolhido React no nível Júnior).
-  - Implementar uma interface de usuário mais rica e responsiva.
-- **Banco de Dados:** Integração com um banco de dados relacional (ex: PostgreSQL).
-  - Persistir dados de usuários, postagens e reações (curtidas).
-- **Cache:** Implementar cache utilizando Redis para melhorar a performance das operações de leitura.
-- **Testes de Integração:** Criar testes de integração para validar o fluxo completo da aplicação.
+## Configuração de Variáveis de Ambiente
 
-#### Implementação Inicial
-- O diretório `frontend-nextjs/` já contém um pacote inicial criado com `create-next-app`, pronto para ser expandido.
-- **Expectativas**:
-  - Otimizar a aplicação para usar um banco de dados relacional e implementar as funcionalidades adicionais conforme descrito nos requisitos.
+Após clonar o repositório, você precisará criar os arquivos `.env` necessários para cada serviço:
 
-### Nível Sênior
+**Back-end:**
 
-#### Requisitos Adicionais
-- **Escalabilidade e Performance:** Otimizar a aplicação para suportar um grande volume de postagens e curtidas simultâneas.
-  - Implementar concorrência utilizando Golang para processos críticos de performance (caso escolha Go).
-- **WebSocket:** Implementar WebSocket para atualizações em tempo real na timeline.
-- **Funcionalidade Offline:** Permitir que a aplicação funcione offline utilizando Service Workers.
-- **Monitoramento e Logs:** Configurar monitoramento e logging para a aplicação utilizando ferramentas como ELK Stack (Elasticsearch, Logstash, Kibana).
-- **Microsserviços:** Refatorar parte da aplicação para uma arquitetura de microsserviços, separando responsabilidades (ex: serviço de autenticação, serviço de perfis, serviço de postagens).
+    - Caminho: `packages/api-node/.env`
+    - exemplo: Use o arquivo `packages/api-node/.env.example` como base.
+    - Variáveis necessárias:
+        - `DATABASE_URL`: URL do banco de dados.
+        - `JWT_SECRET`: Segredo para JWT.
+        - `PORT`: Porta em que a API deve rodar.
 
-#### Implementação Inicial
-- Os diretórios `microservices-go/` (`auth-service`, `post-service`, `profile-service`) foram criados, mas estão vazios. Esses diretórios servem como base para implementação de uma arquitetura de microsserviços, onde cada serviço é responsável por uma parte específica da aplicação.
-- **Expectativas**:
-  - Implementar toda a estrutura de microsserviços, utilizando Golang, com foco em escalabilidade e performance.
+**Front-end:**
 
-## Instruções de Entrega
+    - Caminho: `packages/frontend-react/.env`
+    - Exemplo: Use o arquivo `packages/frontend-react/.env.example` como base.
+    - Variáveis necessárias:
+        - `REACT_APP_API_URL`: URL da API.
+## Rodando os testes
 
-1. **Repositório Git:** Submeta o código em um repositório Git. Pode ser público ou privado (forneça acesso se for privado).
-2. **Branches:** Crie uma branch específica para cada nível (junior, pleno, senior). Certifique-se de que o código esteja devidamente commitado em cada branch correspondente.
-3. **README Individual:** Cada branch deve conter um README.md próprio explicando as decisões técnicas tomadas, como configurar e rodar a aplicação para aquele nível.
-4. **Demonstração:** Opcional, mas recomendado. Inclua uma demonstração ao vivo ou um vídeo explicando a aplicação e as funcionalidades implementadas.
+Para rodar os testes, rode o seguinte comando
 
-## Avaliação
+```bash
+  npm run test
+```
 
-Os candidatos serão avaliados com base nos seguintes critérios:
 
-- **Código Limpo e Manutenível:** Organização do código, padrões de projeto, legibilidade e comentários.
-- **Funcionalidade:** Atendimento aos requisitos mínimos e adicionais conforme o nível.
-- **Qualidade dos Testes:** Cobertura e eficácia dos testes unitários e de integração.
-- **Desempenho:** Capacidade de lidar com carga elevada, eficiência do uso de cache e concorrência.
-- **Documentação:** Qualidade e clareza da documentação da API e do código.
-- **Inovação e Melhoria:** Implementação de funcionalidades adicionais que demonstrem criatividade e conhecimento avançado.
+## Documentação da API
 
-## Como Iniciar
 
-1. Clone este repositório:
-
-2. Navegue até o diretório correspondente ao seu nível e tecnologia escolhida.
-   
-3. Siga as instruções do README específico da branch para rodar a aplicação e começar a desenvolver.
-
-Boa sorte!
+```http
+  http://localhost:3333/docs
+```

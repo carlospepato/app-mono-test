@@ -14,7 +14,6 @@ import { timelineRoutes } from './routes/timelineRoutes';
 
 const server = Fastify({ logger: true });
 server.register(cors,{
-  origin: '*',
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
 })
 
