@@ -2,6 +2,23 @@ import z from "zod";
 
 // tipagem das requisições de like e unlike
 
+export const getAllLikesSchema = {
+  tags: ['Like'],
+  summary: 'Get all likes',
+  response: {
+    200: z.object({
+      likes: z.array(z.object({
+        id: z.string(),
+        userId: z.string(),
+        postId: z.string(),
+      })),
+    }),
+    400: z.object({
+      message: z.string(),
+    })
+  }
+}
+
 export const likeSchema = {
   tags: ['Like'],
   summary: 'Like a post',

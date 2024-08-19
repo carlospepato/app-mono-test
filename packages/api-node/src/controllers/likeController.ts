@@ -11,6 +11,24 @@ type unlikeRequest = FastifyRequest<{
   Params: z.infer<typeof unlikeSchema.params>
 }>
 
+async function getAllLikes(request: FastifyRequest, reply: FastifyReply){
+  // chama o serviço de like e passa o id do usuário e do post como parâmetros
+  const likes = await likeService.getAllLikes()
+
+  // verifica se não há likes
+  if (likes.length === 0) {
+    reply.code(400).send({message: "No likes found"})
+  } else {
+    reply.code(200).send({
+      likes: likes.map(like => ({
+        id: like.id,
+        userId: like.userid,
+        postId: like.postid
+      }))
+    })
+  }
+}
+
 async function likePost(request: LikeRequest, reply: FastifyReply){
 
   // pega o id do usuário e do post do corpo da requisição
@@ -62,4 +80,4 @@ async function unlikePost(request: unlikeRequest, reply: FastifyReply){
   }
 }
 
-export default { likePost, unlikePost }
+export default {getAllLikes, likePost, unlikePost }

@@ -1,6 +1,12 @@
 import { Like, Unlike } from "../types/like"
 import { prisma } from "../utils/prisma"
 
+async function getAllLikes() {
+  // buscar todos os likes no banco de dados
+  const likes = await prisma.like.findMany()
+  return likes
+}
+
 async function likePost({postid, userid} : Like) {
   // buscar post no banco de dados
   const post = await prisma.post.findFirst({where: {id: postid}})
@@ -49,4 +55,4 @@ async function unlikePost({ id } : Unlike) {
   return {message: "Post unliked"}
 }
 
-export default { likePost, unlikePost }
+export default {getAllLikes, likePost, unlikePost }
