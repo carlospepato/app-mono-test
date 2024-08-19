@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useAuth } from "../../context/authContext";
 
 interface ProfileData {
   message: string;
@@ -18,8 +19,8 @@ interface UserData {
 }
 
 const profileFormSchema = z.object({
-  name: z.string().min(1,"Nome é obrigatório"),
-  email: z.string().email("Formato de email inválido").min(1,"Email é obrigatório"),
+  name: z.string().min(1, "Nome é obrigatório"),
+  email: z.string().email("Formato de email inválido").min(1, "Email é obrigatório"),
 });
 
 type ProfileForm = z.infer<typeof profileFormSchema>;
@@ -28,6 +29,7 @@ export function Profile() {
   const { register, handleSubmit, formState: { errors, isSubmitting }, setValue } = useForm<ProfileForm>({
     resolver: zodResolver(profileFormSchema),
   });
+  const { updateUser } = useAuth();
   const [profile, setProfile] = useState<ProfileData | null>(null);
 
   useEffect(() => {
@@ -52,7 +54,7 @@ export function Profile() {
         }
 
         const data = await response.json();
-        console.log(data)
+        console.log(data);
         setProfile(data);
         setValue('name', data.user.name);
         setValue('email', data.user.email);
@@ -96,6 +98,9 @@ export function Profile() {
 
       const updatedProfile = await response.json();
       setProfile(updatedProfile);
+
+      // Atualiza o contexto com o novo nome e email
+      updateUser(updatedProfile.user);
     } catch (error) {
       console.error('Failed to update profile:', error);
     }
