@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Heart, UserCircle } from "phosphor-react";
+import { apiUrl } from "../../config/config";
 
 interface CardPostProps {
   postId: string;
@@ -30,7 +31,7 @@ export function CardPost({ postId, content, userName, userId }: CardPostProps) {
           return;
         }
 
-        const response = await fetch('http://localhost:3333/like', {
+        const response = await fetch(`${apiUrl}/like`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -66,7 +67,7 @@ export function CardPost({ postId, content, userName, userId }: CardPostProps) {
         return;
       }
 
-      const response = await fetch('http://localhost:3333/like', {
+      const response = await fetch(`${apiUrl}/like`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -99,7 +100,7 @@ export function CardPost({ postId, content, userName, userId }: CardPostProps) {
         return;
       }
 
-      const response = await fetch(`http://localhost:3333/like/${likeId}`, {
+      const response = await fetch(`${apiUrl}/like/${likeId}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',

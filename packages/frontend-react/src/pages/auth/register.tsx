@@ -3,6 +3,7 @@ import { useForm } from 'react-hook-form'
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
+import { apiUrl } from "../../../config/config";
 
 const registerForm = z.object({
   name: z.string().min(1, "Nome é obrigatório"),
@@ -23,7 +24,7 @@ export function Register() {
       return;
     }
     try {
-      const response = await fetch('http://localhost:3333/register', {
+      const response = await fetch(`${apiUrl}/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

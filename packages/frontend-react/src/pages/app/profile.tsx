@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useAuth } from "../../context/authContext";
+import { apiUrl } from "../../../config/config";
 
 interface ProfileData {
   message: string;
@@ -41,7 +42,7 @@ export function Profile() {
           return;
         }
 
-        const response = await fetch('http://localhost:3333/profile', {
+        const response = await fetch(`${apiUrl}/profile`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -80,7 +81,7 @@ export function Profile() {
         return;
       }
 
-      const response = await fetch(`http://localhost:3333/user/${profile?.user.id}`, {
+      const response = await fetch(`${apiUrl}/user/${profile?.user.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

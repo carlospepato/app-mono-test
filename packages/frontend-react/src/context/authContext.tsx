@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import { apiUrl } from "../../config/config";
 
 interface UserData {
   id: string;
@@ -61,7 +62,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const token = localStorage.getItem('token');
       if (!token) return;
 
-      const response = await fetch(`http://localhost:3333/profile`, {
+      const response = await fetch(`${apiUrl}/profile`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',

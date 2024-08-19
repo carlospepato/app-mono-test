@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { useAuth } from '../../context/authContext';
 import { toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
+import { apiUrl } from "../../../config/config";
 
 const loginForm = z.object({
   email: z.string().email(),
@@ -24,7 +25,7 @@ export function Login() {
     }
 
     try {
-      const response = await fetch('http://localhost:3333/login', {
+      const response = await fetch(`${apiUrl}/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

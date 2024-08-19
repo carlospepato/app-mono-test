@@ -1,5 +1,6 @@
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
+import { apiUrl } from '../../config/config';
 
 const postForm = z.object({
   post: z.string().min(1),
@@ -29,7 +30,7 @@ export function CreatePost({ userId, onPostCreated }: CreatePostProps) {
         return;
       }
 
-      const response = await fetch('http://localhost:3333/post', {
+      const response = await fetch(`${apiUrl}/post`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

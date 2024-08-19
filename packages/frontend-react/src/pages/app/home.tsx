@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { CardPost } from "../../components/cardPost";
 import { CreatePost } from "../../components/createPost";
+import { apiUrl } from '../../../config/config.ts'
 
 interface ProfileData {
   message: string;
@@ -42,7 +43,7 @@ export function Home() {
         return;
       }
 
-      const response = await fetch('http://localhost:3333/profile', {
+      const response = await fetch(`${apiUrl}/profile`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -69,7 +70,7 @@ export function Home() {
         return;
       }
 
-      const response = await fetch('http://localhost:3333/timeline', {
+      const response = await fetch(`${apiUrl}/timeline`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -103,10 +104,10 @@ export function Home() {
         <div className="w-full h-px bg-zinc-500 my-4"></div>
         <div className="w-full my-4">
           {posts.map((post) => (
-            <CardPost 
-              key={post.id} 
+            <CardPost
+              key={post.id}
               content={post.content}
-              userId= {profile?.user.id || ""}
+              userId={profile?.user.id || ""}
               userName={post.user.name}
               postId={post.id}
             />
