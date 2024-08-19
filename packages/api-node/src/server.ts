@@ -12,11 +12,12 @@ import { authRoutes } from './routes/authRoutes';
 import { profileRoutes } from './routes/profileRoutes';
 import { timelineRoutes } from './routes/timelineRoutes';
 
+const allowedOrigins = process.env.FRONTEND_URL || 'http://localhost:5173';
+
 const server = Fastify({ logger: true });
 server.register(cors,{
-  origin: "*",
+  origin: allowedOrigins,
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
 })
 
 
