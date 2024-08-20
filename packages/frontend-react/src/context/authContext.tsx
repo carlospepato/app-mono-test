@@ -15,6 +15,7 @@ interface AuthContextProps {
   logout: () => void;
   fetchUserProfile: () => Promise<void>;
   updateUser: (updatedUser: UserData) => void;
+  deleteUser: () => Promise<void>;
 }
 
 const PublicRoutes = ['/login', '/register'];
@@ -57,6 +58,43 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     navigate('/login', { replace: true });
   };
 
+  const deleteUser = async () => {
+    if (!user?.id) {
+      console.error("User ID is not available.");
+      return;
+    }
+
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        console.error("No token found");
+        return;
+      }
+
+      const response = await fetch(`${apiUrl}/user/${user.id}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to delete user data.');
+      }
+
+      const data = await response.json();
+      console.log(data);
+
+      setUser(null);
+      localStorage.removeItem('token');
+      setIsAuthenticated(false);
+      navigate('/login', { replace: true });
+    } catch (error) {
+      console.error("Error deleting user profile:", error);
+    }
+  };
+
   const fetchUserProfile = async () => {
     try {
       const token = localStorage.getItem('token');
@@ -86,7 +124,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, user, login, logout, fetchUserProfile, updateUser }}>
+    <AuthContext.Provider value={{ isAuthenticated, user, login, logout, deleteUser, fetchUserProfile, updateUser }}>
       {children}
     </AuthContext.Provider>
   );

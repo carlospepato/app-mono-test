@@ -30,7 +30,7 @@ export function Profile() {
   const { register, handleSubmit, formState: { errors, isSubmitting }, setValue } = useForm<ProfileForm>({
     resolver: zodResolver(profileFormSchema),
   });
-  const { updateUser } = useAuth();
+  const { updateUser, deleteUser } = useAuth();
   const [profile, setProfile] = useState<ProfileData | null>(null);
 
   useEffect(() => {
@@ -55,7 +55,6 @@ export function Profile() {
         }
 
         const data = await response.json();
-        console.log(data);
         setProfile(data);
         setValue('name', data.user.name);
         setValue('email', data.user.email);
@@ -107,20 +106,31 @@ export function Profile() {
     }
   }
 
+  const handleDeleteUser = async () => {
+    if (window.confirm("Tem certeza que deseja deletar sua conta? Esta ação não pode ser desfeita.")) {
+      await deleteUser();
+    }
+  };
+
   return (
     <div className="max-w-4xl w-full mx-auto px-3">
-      <div className="w-full bg-zinc-700/50 rounded-t-lg flex items-center gap-4 p-4 mb-4">
-        <UserCircle size={80} />
-        <div className="mt-6 flex flex-col gap-3">
-          <span className="text-3xl font-semibold">{profile?.user.name}</span>
-          <span className="flex gap-2 items-start font-medium text-zinc-400">
-            <Suitcase size={20} weight="bold" className="text-primary" />
-            Desenvolvedor Fullstack
-          </span>
-          <span className="flex gap-2 items-start font-medium text-zinc-400">
-            <MapPin size={20} weight="bold" className="text-primary" />
-            Curitiba - PR
-          </span>
+      <div className="w-full bg-zinc-700/50 rounded-t-lg flex items-center gap-4 p-4 mb-4 justify-between">
+        <div className="flex gap-3 items-center justify-between">
+          <UserCircle size={80} />
+          <div className="mt-6 flex flex-col gap-3">
+            <span className="text-3xl font-semibold">{profile?.user.name}</span>
+            <span className="flex gap-2 items-start font-medium text-zinc-400">
+              <Suitcase size={20} weight="bold" className="text-primary" />
+              Desenvolvedor Fullstack
+            </span>
+            <span className="flex gap-2 items-start font-medium text-zinc-400">
+              <MapPin size={20} weight="bold" className="text-primary" />
+              Curitiba - PR
+            </span>
+          </div>
+        </div>
+        <div className="-mt-10">
+          <button onClick={handleDeleteUser} className="bg-zinc-700 text-zinc-300 p-2 rounded-md hover:bg-red-600 font-medium">Deletar conta</button>
         </div>
       </div>
       <div className="w-full bg-zinc-700/50 rounded-lg flex items-center gap-4 p-4">
